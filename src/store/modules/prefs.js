@@ -1,4 +1,6 @@
 import {
+  ADD_FROM_YOUTUBE,
+  ADD_FROM_YOUTUBE_RECEIVE,
   PREFS_REQUEST,
   PREFS_RECEIVE,
   PREFS_SET,
@@ -55,6 +57,39 @@ export function receivePrefs (data) {
   return {
     type: PREFS_RECEIVE,
     payload: data,
+  }
+}
+
+export function addSongFromYouTube (data) {
+  return (dispatch, getState) => {
+    dispatch(requestAddFromYouTube(data))
+
+    return api('POST', '/youtube', {
+      body: data
+    })
+      .then(song => {
+        dispatch(receiveAddFromYoutube(song))
+      })
+      .catch(err => {
+        dispatch({
+          type: ADD_FROM_YOUTUBE + _ERROR,
+          error: err.message,
+        })
+      })
+  }
+}
+
+export function requestAddFromYouTube (data) {
+  return {
+    type: ADD_FROM_YOUTUBE,
+    payload: data,
+  }
+}
+
+export function receiveAddFromYoutube (song) {
+  return {
+    type: ADD_FROM_YOUTUBE_RECEIVE,
+    payload: song,
   }
 }
 
@@ -116,6 +151,21 @@ const ACTION_HANDLERS = {
     scannerPct: payload.pct,
     scannerText: payload.text,
   }),
+  [ADD_FROM_YOUTUBE]: state => ({
+    ...state,
+    isAddingFromYouTube: true,
+    lastAddedFromYouTube: initialState.lastAddedFromYouTube,
+  }),
+  [ADD_FROM_YOUTUBE_RECEIVE]: (state, { payload }) => ({
+    ...state,
+    isAddingFromYouTube: false,
+    lastAddedFromYouTube: payload
+  }),
+  [ADD_FROM_YOUTUBE + _ERROR]: state => ({
+    ...state,
+    isAddingFromYouTube: false,
+  }),
+
 }
 
 // ------------------------------------
@@ -125,6 +175,8 @@ const initialState = {
   isScanning: false,
   isReplayGainEnabled: false,
   paths: { result: [], entities: {} },
+  isAddingFromYouTube: false,
+  lastAddedFromYouTube: undefined,
   scannerPct: 0,
   scannerText: '',
 }
