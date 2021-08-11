@@ -58,6 +58,8 @@ const getStatusProps = createSelector(
   }
 )
 
+const allowSingerControl = false
+
 // component
 const Header = React.forwardRef((props, ref) => {
   const CustomHeader = props.customHeader
@@ -82,7 +84,7 @@ const Header = React.forwardRef((props, ref) => {
         <UpNext isUpNext={isUpNext} isUpNow={isUpNow} wait={wait} />
       }
 
-      {(isUpNow || isAdmin) &&
+      {((isUpNow && allowSingerControl) || isAdmin) &&
         <PlaybackCtrl />
       }
 
