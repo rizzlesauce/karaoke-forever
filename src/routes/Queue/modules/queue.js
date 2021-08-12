@@ -5,6 +5,7 @@ import {
   QUEUE_REMOVE,
   _SUCCESS,
 } from 'shared/actionTypes'
+import { _ERROR } from '../../../../shared/actionTypes'
 
 // add song to queue
 export function queueSong (songId) {
@@ -57,6 +58,16 @@ const ACTION_HANDLERS = {
         ...state.entities,
         [fakeQueueId]: { ...payload, isOptimistic: true },
       }
+    }
+  },
+  [QUEUE_ADD + _SUCCESS]: state => {
+    return {
+      ...state,
+    }
+  },
+  [QUEUE_ADD + _ERROR]: state => {
+    return {
+      ...state,
     }
   },
   [QUEUE_REMOVE]: (state, { payload }) => {
