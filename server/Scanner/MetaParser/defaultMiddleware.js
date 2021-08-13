@@ -108,6 +108,12 @@ m.set('move leading articles', (ctx, next) => {
   next()
 })
 
+m.set('replace empty', (ctx, next) => {
+  ctx.artist = ctx.artist || 'Unknown'
+  ctx.title = ctx.title || 'Untitled'
+  next()
+})
+
 // ---------
 // normalize
 // ---------
