@@ -5,6 +5,7 @@ import QueueYoutubeItem from '../QueueYoutubeItem'
 import { formatSeconds } from 'lib/dateTime'
 import { CSSTransition, TransitionGroup } from 'react-transition-group'
 import styles from './QueueList.css'
+import { isPublicDevice } from '../../../Library/components/SongList/SongList'
 const QUEUE_ITEM_HEIGHT = 92
 
 class QueueList extends React.Component {
@@ -123,8 +124,8 @@ class QueueList extends React.Component {
             isInfoable={props.user.isAdmin}
             isOwner={isOwner}
             isPlayed={!isUpcoming && !isCurrent}
-            isRemovable={(isUpcoming && isOwner) || (props.user.isAdmin && !isCurrent)}
-            isSkippable={isCurrent && (isOwner || props.user.isAdmin)}
+            isRemovable={(isUpcoming && isOwner && !isPublicDevice) || (props.user.isAdmin && !isCurrent)}
+            isSkippable={isCurrent && ((isOwner && !isPublicDevice) || props.user.isAdmin)}
             isStarred={props.starredSongs.includes(item.songId)}
             isUpcoming={isUpcoming}
             pctPlayed={isCurrent ? props.position / duration * 100 : 0}

@@ -127,6 +127,7 @@ class SearchResults extends React.Component {
           isExpanded={this.props.expandedArtistResults.includes(artistId)}
           filterKeywords={this.props.filterKeywords}
           onArtistClick={this.props.toggleArtistResultExpanded}
+          onModal={this.props.onModal}
           key={artistId}
           style={style}
         />
@@ -152,6 +153,7 @@ class SearchResults extends React.Component {
           filterKeywords={this.props.filterKeywords}
           queuedSongs={this.props.queuedSongs}
           playedSongs={this.props.playedSongs}
+          onModal={this.props.onModal}
         />
       </div>
     )
