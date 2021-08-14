@@ -146,7 +146,7 @@ class AccountForm extends Component {
         isDirty: (this.username && !!this.username.value) ||
           (this.newPassword && !!this.newPassword.value) ||
           this.name.value !== this.props.user.name ||
-          this.role.value !== (this.props.user.isAdmin ? '1' : '0'),
+          this.role?.value !== (this.props.user.isAdmin ? '1' : '0'),
         isChangingPassword: this.newPassword && !!this.newPassword.value,
       })
     }
