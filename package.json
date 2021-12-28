@@ -79,7 +79,7 @@
     "strip-ansi": "^6.0.0",
     "vm2": "^3.9.3",
     "yargs": "^17.0.1",
-    "ytdl-core": "^4.9.1",
+    "ytdl-core": "^4.9.2",
     "ytsr": "^3.5.0"
   },
   "devDependencies": {
