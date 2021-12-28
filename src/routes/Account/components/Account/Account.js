@@ -1,5 +1,5 @@
 import React, { useCallback, useRef, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { connect, useDispatch } from 'react-redux'
 import { updateAccount, logout } from 'store/modules/user'
 import AccountForm from '../AccountForm'
 import styles from './Account.css'
@@ -7,22 +7,28 @@ import styles from './Account.css'
 const Account = props => {
   const curPassword = useRef(null)
 
-  const user = useSelector(state => state.user)
+  const {
+    isPasswordRequired,
+    user,
+  } = props
+
   const [isDirty, setDirty] = useState(false)
 
   const dispatch = useDispatch()
   const handleDirtyChange = useCallback(isDirty => setDirty(isDirty), [])
   const handleSignOut = useCallback(() => dispatch(logout()), [dispatch])
   const handleSubmit = useCallback(data => {
-    if (!curPassword.current.value.trim()) {
-      alert('Please enter your current password to make changes.')
-      curPassword.current.focus()
-      return
-    }
+    if (isPasswordRequired) {
+      if (!curPassword.current.value.trim()) {
+        alert('Please enter your current password to make changes.')
+        curPassword.current.focus()
+        return
+      }
 
-    data.append('password', curPassword.current.value)
+      data.append('password', curPassword.current.value)
+    }
     dispatch(updateAccount(data))
-  }, [dispatch])
+  }, [dispatch, isPasswordRequired])
 
   return (
     <div className={styles.container}>
@@ -34,11 +40,13 @@ const Account = props => {
           {isDirty &&
             <>
               <br />
-              <input type='password'
-                autoComplete='current-password'
-                placeholder='current password'
-                ref={curPassword}
-              />
+              {isPasswordRequired &&
+                <input type='password'
+                  autoComplete='current-password'
+                  placeholder='current password'
+                  ref={curPassword}
+                />
+              }
               <button className={`primary ${styles.updateAccount}`}>
                 Update Account
               </button>
@@ -54,4 +62,11 @@ const Account = props => {
   )
 }
 
-export default Account
+const mapStateToProps = state => {
+  return {
+    isPasswordRequired: state.prefs.isPasswordRequired,
+    user: state.user,
+  }
+}
+
+export default connect(mapStateToProps)(Account)
