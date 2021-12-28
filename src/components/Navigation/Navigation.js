@@ -10,6 +10,10 @@ const Navigation = React.forwardRef((props, ref) => {
   const showIconTitles = true
   const dispatch = useDispatch()
 
+  const username = props.username || 'User'
+  const userDisplayName = props.userDisplayName || username
+  const usernamePart = username === userDisplayName ? username : `${username} (${userDisplayName})`
+
   return (
     <div className={`${styles.container} bg-blur`} ref={ref}>
       <NavLink to='/library' className={styles.btn} activeClassName={styles.btnActive}>
@@ -32,25 +36,19 @@ const Navigation = React.forwardRef((props, ref) => {
         <Icon icon='NAV_ACCOUNT' size={42} className={styles.shadow}/>
         {showIconTitles && (
           <div>
-            {props.username ? (
-              <>
-                {props.username} ({props.userDisplayName})
-                {isPublicDevice && (
-                  <div>
-                    <a
-                      onClick={e => {
-                        e.preventDefault()
-                        dispatch(logout())
-                      }}
-                      style={{
-                        color: 'orange',
-                      }}
-                    >Sign Out</a>
-                  </div>
-                )}
-              </>
-            ) : (
-              'User'
+            {usernamePart}
+            {props.username && isPublicDevice && (
+              <div>
+                <a
+                  onClick={e => {
+                    e.preventDefault()
+                    dispatch(logout())
+                  }}
+                  style={{
+                    color: 'orange',
+                  }}
+                >Sign Out</a>
+              </div>
             )}
           </div>
         )}
