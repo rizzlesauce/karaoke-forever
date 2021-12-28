@@ -6,6 +6,16 @@ import { logout } from '../../../../store/modules/user'
 import { connect, useDispatch } from 'react-redux'
 import history from 'lib/history'
 
+export const showQueueAfterQueuing = true
+
+export function goToQueueAfterQueuing() {
+  if (showQueueAfterQueuing) {
+    setTimeout(() => {
+      history.push('queue')
+    }, 1200)
+  }
+}
+
 const params = queryString.parse(window.location.search)
 console.log('isPublicDeviceParam', params.public)
 if (params.public === null || params.public === 'true') {
@@ -71,15 +81,11 @@ const SongList = (props) => {
                 return
               }
 
-              const showQueueAfterQueuing = true
-
               const queueIt = () => {
                 closeModal()
                 props.queueSong(songId)
                 if (showQueueAfterQueuing) {
-                  setTimeout(() => {
-                    history.push('queue')
-                  }, 1200)
+                  goToQueueAfterQueuing();
                 }
               }
 

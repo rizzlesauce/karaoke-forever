@@ -6,6 +6,7 @@ import ArtistItem from '../ArtistItem'
 import SongList from '../SongList'
 import styles from './SearchResults.css'
 import YouTubeSearch from '../YouTubeSearch'
+import { goToQueueAfterQueuing, showQueueAfterQueuing } from '../SongList/SongList'
 
 const YOUTUBE_SEARCH_BUTTON_HEIGHT = 90
 const ARTIST_HEADER_HEIGHT = 22
@@ -195,6 +196,9 @@ class SearchResults extends React.Component {
 
   cancelSearchYouTube = () => {
     this.setState({ searchingYouTube: false })
+    if (showQueueAfterQueuing) {
+      goToQueueAfterQueuing();
+    }
   }
 
   setRef = (ref) => {
