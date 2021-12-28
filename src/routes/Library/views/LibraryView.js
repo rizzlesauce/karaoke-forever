@@ -68,9 +68,11 @@ const LibraryView = (props) => {
         onClose={modal?.onClose || (() => setModal())}
         title={modal?.title}
         buttons={modal?.buttons}
-        style={{ width: '100%', height: '100%' }}
+        style={{ width: '90%', height: '90%' }}
       >
-        {modal?.content}
+        <div className={styles.container}>
+          {modal?.content}
+        </div>
       </Modal>
     </>
   )
