@@ -78,6 +78,8 @@ class SearchResults extends React.Component {
   rowRenderer = ({ index, style }) => {
     const { artistsResult, songsResult, filterStarred, songs } = this.props
     const emptyLibrary = Object.keys(songs).length === 0
+    const noResults = artistsResult.length === 0 && songsResult.length === 0
+    const pressingEnterAlwaysSearchesYoutube = false
 
     // YouTube search button
     if (this.props.isYouTubeEnabled) {
@@ -85,7 +87,7 @@ class SearchResults extends React.Component {
         return (
           <div style={style} className={styles.youtubeButtonContainer}>
             <button
-              id={emptyLibrary ? 'youtubeSearchButton' : ''}
+              id={(emptyLibrary || noResults || pressingEnterAlwaysSearchesYoutube) ? 'youtubeSearchButton' : ''}
               onClick={this.searchYouTube}
               className={`${styles.btn} primary ${styles.youtubeButton}`}
             >
