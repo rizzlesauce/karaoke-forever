@@ -31,6 +31,10 @@ class AccountForm extends Component {
     if (this.props.onDirtyChange && prevState.isDirty !== this.state.isDirty) {
       this.props.onDirtyChange(this.state.isDirty)
     }
+
+    if ((!this.props.user || this.props.user.userId === null) && !this.props.isPasswordRequired && this.state.isChangingPassword) {
+      this.setState({ isChangingPassword: false })
+    }
   }
 
   render () {
