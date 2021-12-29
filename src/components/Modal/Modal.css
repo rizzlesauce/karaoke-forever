@@ -43,6 +43,7 @@
 
 .modalCloseButton {
   position: absolute;
+  visibility: hidden;
   top: 14px;
   right: 14px;
   border: none;
