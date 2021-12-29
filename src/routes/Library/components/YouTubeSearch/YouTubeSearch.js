@@ -16,6 +16,10 @@ class YouTubeSearch extends React.Component {
     filterKeywords: PropTypes.array.isRequired,
     ui: PropTypes.object.isRequired,
     onDone: PropTypes.func.isRequired,
+    onModal: PropTypes.func.isRequired,
+    onLogOut: PropTypes.func.isRequired,
+    username: PropTypes.string,
+    userDisplayName: PropTypes.string,
   }
 
   state = {
@@ -39,6 +43,10 @@ class YouTubeSearch extends React.Component {
       .catch(() => {
         this.setState({ error:true, loading:false })
       })
+  }
+
+  logOut = () => {
+    this.props.onLogOut()
   }
 
   render () {
@@ -86,6 +94,10 @@ class YouTubeSearch extends React.Component {
           query={this.props.filterKeywords.join(' ')}
           onQueued={this.videoQueued}
           onCancel={this.identifyCancelled}
+          onModal={this.props.onModal}
+          onLogOut={this.logOut}
+          username={this.props.username}
+          userDisplayName={this.props.userDisplayName}
         />
       )
     }

@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types'
 import React, { useState } from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import LibraryHeader from '../components/LibraryHeader'
 import ArtistList from '../components/ArtistList'
@@ -9,6 +9,8 @@ import TextOverlay from 'components/TextOverlay'
 import Spinner from 'components/Spinner'
 import styles from './LibraryView.css'
 import Modal from 'components/Modal'
+import { closeAModal } from '../components/SongList/SongList'
+import { logout } from '../../../store/modules/user'
 
 const LibraryView = (props) => {
   const {
@@ -21,9 +23,16 @@ const LibraryView = (props) => {
   const isKaraokeGeneratorEnabled = useSelector(state => state.prefs.isKaraokeGeneratorEnabled)
   React.useLayoutEffect(() => props.setHeader(LibraryHeader))
 
+  const dispatch = useDispatch()
+
   const [modal, setModal] = useState()
 
   const onModal = modal => setModal(modal)
+
+  const logOut = () => {
+    closeAModal({ onModal })
+    dispatch(logout())
+  }
 
   return (
     <>
@@ -32,7 +41,7 @@ const LibraryView = (props) => {
       }
 
       {isSearching &&
-        <SearchResults {...props} onModal={onModal} />
+        <SearchResults {...props} onModal={onModal} onLogOut={logOut} />
       }
 
       {isLoading &&

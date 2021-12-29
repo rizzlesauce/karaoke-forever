@@ -21,12 +21,16 @@ class SearchResults extends React.Component {
     expandedArtistResults: PropTypes.array.isRequired,
     filterKeywords: PropTypes.array.isRequired,
     filterStarred: PropTypes.bool.isRequired,
+    onModal: PropTypes.func.isRequired,
+    onLogOut: PropTypes.func.isRequired,
     queuedSongs: PropTypes.array.isRequired,
     songs: PropTypes.object.isRequired,
     songsResult: PropTypes.array.isRequired,
     starredSongs: PropTypes.array.isRequired,
     starredArtistCounts: PropTypes.object.isRequired,
     ui: PropTypes.object.isRequired,
+    username: PropTypes.string,
+    userDisplayName: PropTypes.string,
     // actions
     toggleArtistResultExpanded: PropTypes.func.isRequired,
 
@@ -49,11 +53,19 @@ class SearchResults extends React.Component {
     }
   }
 
+  logOut = () => {
+    this.props.onLogOut()
+  }
+
   render () {
     if (this.state.searchingYouTube) {
       return (
         <YouTubeSearch
           onDone={this.cancelSearchYouTube}
+          onModal={this.props.onModal}
+          onLogOut={this.logOut}
+          username={this.props.username}
+          userDisplayName={this.props.userDisplayName}
           filterKeywords={this.props.filterKeywords}
           ui={this.props.ui}
         />
@@ -210,7 +222,9 @@ class SearchResults extends React.Component {
 
 const mapStateToProps = state => {
   return {
-    isYouTubeEnabled: state.prefs.isYouTubeEnabled
+    isYouTubeEnabled: state.prefs.isYouTubeEnabled,
+    username: state.user.username,
+    userDisplayName: state.user.name,
   }
 }
 

@@ -16,6 +16,64 @@ export function goToQueueAfterQueuing() {
   }
 }
 
+export function closeAModal({
+  onModal,
+}) {
+  return onModal()
+}
+
+export function informLogOut({
+  onModal,
+  onLogOut,
+}) {
+  onModal({
+    title: `Sign in`,
+    content: (
+      <>
+        <p>Please sign in or create an account before queuing up your song</p>
+      </>
+    ),
+    buttons: (
+      <>
+        <button onClick={onLogOut}>Sign in</button>
+      </>
+    ),
+  })
+}
+
+export function checkPersonIdentity({
+  onModal,
+  username,
+  userDisplayName,
+  onConfirm,
+  onLogOut,
+}) {
+  if (isPublicDevice) {
+    onModal({
+      title: (
+        <span>Are you <i>{userDisplayName}</i>?</span>
+      ),
+      content: (
+        <>
+          <span>username: <i>{username}</i></span>
+          <br /><span>display name: <i>{userDisplayName}</i></span>
+          <p>
+            <i>(Please check that you're not accidentally signed in as someone else)</i>
+          </p>
+        </>
+      ),
+      buttons: (
+        <>
+          <button onClick={() => informLogOut({ onModal, onLogOut })}>That's not me</button>
+          <button onClick={onConfirm}>Yes, I'm "{userDisplayName}"</button>
+        </>
+      ),
+    })
+  } else {
+    onConfirm()
+  }
+}
+
 const params = queryString.parse(window.location.search)
 console.log('isPublicDeviceParam', params.public)
 if (params.public === null || params.public === 'true') {
@@ -64,7 +122,7 @@ const SongList = (props) => {
               const alreadyPlayedMessage = 'has already been played'
               const alreadyQueuedMessage = 'is already in the queue'
 
-              const closeModal = () => onModal()
+              const closeModal = () => closeAModal({ onModal })
 
               if ((isQueued || wasPlayed) && !allowDupsInQueue) {
                 onModal({
@@ -94,48 +152,13 @@ const SongList = (props) => {
                 dispatch(logout())
               }
 
-              const informLogOut = () => {
-                onModal({
-                  title: `Sign in`,
-                  content: (
-                    <>
-                      <p>Please sign in or create an account before queuing up your song</p>
-                    </>
-                  ),
-                  buttons: (
-                    <>
-                      <button onClick={logOut}>Sign in</button>
-                    </>
-                  ),
-                })
-              }
-
-              const checkPerson = () => {
-                if (isPublicDevice) {
-                  onModal({
-                    title: (
-                      <span>Are you <i>{userDisplayName}</i>?</span>
-                    ),
-                    content: (
-                      <>
-                        <span>username: <i>{username}</i></span>
-                        <br /><span>display name: <i>{userDisplayName}</i></span>
-                        <p>
-                          <i>(Please check that you're not accidentally signed in as someone else)</i>
-                        </p>
-                      </>
-                    ),
-                    buttons: (
-                      <>
-                        <button onClick={informLogOut}>That's not me</button>
-                        <button onClick={queueIt}>Yes, I'm "{userDisplayName}"</button>
-                      </>
-                    ),
-                  })
-                } else {
-                  queueIt()
-                }
-              }
+              const checkPerson = () => checkPersonIdentity({
+                onModal,
+                username,
+                userDisplayName,
+                onConfirm: queueIt,
+                onLogOut: logOut,
+              })
 
               if ((isQueued || wasPlayed) && warnDupsInQueue) {
                 onModal({

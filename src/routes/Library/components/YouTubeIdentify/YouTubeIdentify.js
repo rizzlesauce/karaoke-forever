@@ -8,6 +8,7 @@ import { _ERROR, USERS_REQUEST } from '../../../../../shared/actionTypes'
 import { fetchUsers, receiveUsers } from '../../../Account/modules/users'
 import { durationToSeconds } from 'lib/dateTime'
 import YouTubeSongItem from '../YouTubeSongItem'
+import { checkPersonIdentity, closeAModal } from '../SongList/SongList'
 
 const api = new HttpApi('')
 
@@ -18,6 +19,10 @@ class YouTubeIdentify extends React.Component {
     ui: PropTypes.object.isRequired,
     onQueued: PropTypes.func.isRequired,
     onCancel: PropTypes.func.isRequired,
+    onModal: PropTypes.func.isRequired,
+    onLogOut: PropTypes.func.isRequired,
+    username: PropTypes.string,
+    userDisplayName: PropTypes.string,
     // actions
     queueYoutubeVideo: PropTypes.func,
   }
@@ -88,7 +93,7 @@ class YouTubeIdentify extends React.Component {
       })
   }
 
-  useLyrics = () => {
+  queueVideo = () => {
     this.props.queueYoutubeVideo(
       this.props.video.id,
       this.props.video.thumbnail,
@@ -101,6 +106,25 @@ class YouTubeIdentify extends React.Component {
     )
     this.setState({
       added:true,
+    })
+  }
+
+  confirmIdentity = () => {
+    closeAModal({ onModal: this.props.onModal })
+    this.queueVideo()
+  }
+
+  logOut = () => {
+    this.props.onLogOut()
+  }
+
+  useLyrics = () => {
+    checkPersonIdentity({
+      onModal: this.props.onModal,
+      username: this.props.username,
+      userDisplayName: this.props.userDisplayName,
+      onConfirm: this.confirmIdentity,
+      onLogOut: this.logOut,
     })
   }
 
